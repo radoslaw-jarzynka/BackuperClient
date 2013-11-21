@@ -1,0 +1,17 @@
+7 Nov 2013 14:33:01 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/index.html
+
+Successfully logged in to server as radek
+
+File on server: index.html
+
+File on server: index.html
+
+Writing file index.html
+
+Finished writing file index.html
+
+Writing file index.html
+
+Finished writing file index.html
+

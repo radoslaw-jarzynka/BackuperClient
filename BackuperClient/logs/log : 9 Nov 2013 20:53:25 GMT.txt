@@ -1,0 +1,26 @@
+9 Nov 2013 20:52:39 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/jason_mraz_im_yours.gp5
+
+9 Nov 2013 20:52:39 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/metallica_mama_said.gp3
+
+9 Nov 2013 20:52:39 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/Zal_08_Osw_o_nie_pobieraniu_2013.doc
+
+9 Nov 2013 20:52:39 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/Zarządzenie.Dziekana.Śiwęto_PW_2013.pdf
+
+Successfully logged in to server as elo
+
+9 Nov 2013 20:52:49 GMT  :  Sending files...
+
+9 Nov 2013 20:52:49 GMT  :  Files currently transferred to server, please wait
+
+Writing selected files
+
+Finished writing files
+
+Writing selected files
+
+Finished writing files
+

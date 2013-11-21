@@ -1,0 +1,38 @@
+5 Nov 2013 13:25:55 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 13:25:55 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 13:25:55 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+5 Nov 2013 13:25:55 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/kigb-205.dmg
+
+5 Nov 2013 13:26:01 GMT  :  Removed File: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 13:26:01 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+5 Nov 2013 13:26:01 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 13:26:01 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/kigb-205.dmg
+
+5 Nov 2013 13:26:06 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+Started calculating md5 for application.pdf
+
+5 Nov 2013 13:26:06 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+Calculating Md5 for declaration.doc queued
+
+Finished calculating md5 for file declaration.doc
+
+30e2c4d122b134ddba9d1dad50ba80ef
+

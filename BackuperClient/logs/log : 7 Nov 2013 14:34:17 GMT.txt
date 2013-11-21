@@ -1,0 +1,5 @@
+7 Nov 2013 14:34:06 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/index.html
+
+Successfully logged in to server as radek
+

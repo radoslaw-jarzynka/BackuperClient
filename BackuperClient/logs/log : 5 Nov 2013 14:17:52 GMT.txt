@@ -1,0 +1,19 @@
+5 Nov 2013 14:12:16 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 14:12:16 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 14:12:16 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+Successfully registered as 1234
+
+Successfully logged in to server as 1234
+
+5 Nov 2013 14:12:38 GMT  :  Sending files...
+
+5 Nov 2013 14:12:38 GMT  :  Files currently transferred to server, please wait
+
+5 Nov 2013 14:17:45 GMT  :  Sending files...
+

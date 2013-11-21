@@ -1,0 +1,11 @@
+7 Nov 2013 14:00:13 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Movies/50-50 (2011)/50.50.2011.720p.BrRip.x264.YIFY.mp4
+
+Successfully registered as radek
+
+7 Nov 2013 14:01:27 GMT  :  Sending files...
+
+7 Nov 2013 14:01:27 GMT  :  Files currently transferred to server, please wait
+
+7 Nov 2013 14:01:58 GMT  :  Sending files...
+

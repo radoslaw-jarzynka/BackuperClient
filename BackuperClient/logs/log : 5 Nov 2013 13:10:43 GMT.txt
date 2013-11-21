@@ -1,0 +1,24 @@
+5 Nov 2013 13:10:25 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 13:10:25 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+
+5 Nov 2013 13:10:27 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+
+5 Nov 2013 13:10:29 GMT  :  Removed File: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 13:10:31 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+Started calculating md5 for index.html
+
+Finished calculating md5 for file index.html
+
+ee3fc806e75db124bfb3aaa1dc4f5dfd
+
+5 Nov 2013 13:10:35 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+

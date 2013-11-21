@@ -1,0 +1,9 @@
+7 Nov 2013 14:31:06 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/index.html
+
+Successfully logged in to server as radek
+
+7 Nov 2013 14:31:17 GMT  :  Sending files...
+
+7 Nov 2013 14:31:17 GMT  :  Files currently transferred to server, please wait
+

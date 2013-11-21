@@ -1,0 +1,45 @@
+15 Nov 2013 11:55:45 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/jason_mraz_im_yours.gp5
+
+15 Nov 2013 11:55:45 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/metallica_mama_said.gp3
+
+15 Nov 2013 11:55:45 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/Zal_08_Osw_o_nie_pobieraniu_2013.doc
+
+15 Nov 2013 11:55:45 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/Zarządzenie.Dziekana.Śiwęto_PW_2013.pdf
+
+Successfully logged in to server as radek
+
+Writing selected files
+
+Finished writing files
+
+15 Nov 2013 11:56:37 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/jason_mraz_im_yours.gp5
+
+15 Nov 2013 11:56:37 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/Zal_08_Osw_o_nie_pobieraniu_2013.doc
+
+15 Nov 2013 11:56:38 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/metallica_mama_said.gp3
+
+15 Nov 2013 11:56:39 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/Zarządzenie.Dziekana.Śiwęto_PW_2013.pdf
+
+15 Nov 2013 11:56:48 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Downloads/datamodeler-3.3.0-747-macosx.tar
+
+Started calculating md5 for datamodeler-3.3.0-747-macosx.tar
+
+Finished calculating md5 for file datamodeler-3.3.0-747-macosx.tar
+
+781bcd90866c3c724321b5c7dd87287a
+
+15 Nov 2013 11:56:53 GMT  :  Sending files...
+
+15 Nov 2013 11:56:53 GMT  :  Files currently transferred to server, please wait
+
+15 Nov 2013 11:57:13 GMT  :  Sending files...
+

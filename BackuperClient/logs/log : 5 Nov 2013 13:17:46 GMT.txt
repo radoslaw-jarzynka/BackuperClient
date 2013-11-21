@@ -1,0 +1,36 @@
+5 Nov 2013 13:17:06 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 13:17:06 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+
+5 Nov 2013 13:17:06 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+5 Nov 2013 13:17:09 GMT  :  Removed File: 
+/Users/radoslawjarzynka/index.html
+
+5 Nov 2013 13:17:09 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+5 Nov 2013 13:17:10 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+
+5 Nov 2013 13:17:15 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+Started calculating md5 for aoeHD.zip
+
+5 Nov 2013 13:17:18 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+Calculating Md5 for index.html queued
+
+Finished calculating md5 for file aoeHD.zip
+
+e9a4041b0cfd1fc0840aa2a9c3da5bea
+
+Finished calculating md5 for file aoeHD.zip
+
+ee3fc806e75db124bfb3aaa1dc4f5dfd
+

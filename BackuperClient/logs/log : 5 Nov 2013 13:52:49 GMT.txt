@@ -1,0 +1,61 @@
+5 Nov 2013 13:52:22 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 13:52:22 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+5 Nov 2013 13:52:22 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/icon.png
+
+5 Nov 2013 13:52:25 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 13:52:25 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/icon.png
+
+5 Nov 2013 13:52:26 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+5 Nov 2013 13:52:29 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+Started calculating md5 for index.html
+
+Finished calculating md5 for file index.html
+
+ee3fc806e75db124bfb3aaa1dc4f5dfd
+
+5 Nov 2013 13:52:35 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+Started calculating md5 for application.pdf
+
+Finished calculating md5 for file application.pdf
+
+24bd0ee2266447e6633607a2e6890bf6
+
+5 Nov 2013 13:52:41 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+Started calculating md5 for application.pdf
+
+5 Nov 2013 13:52:41 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+Calculating Md5 for declaration.doc queued
+
+Finished calculating md5 for file application.pdf
+
+24bd0ee2266447e6633607a2e6890bf6
+
+Finished calculating md5 for file application.pdf
+
+24bd0ee2266447e6633607a2e6890bf6
+
+Finished calculating md5 for file declaration.doc
+
+30e2c4d122b134ddba9d1dad50ba80ef
+
+5 Nov 2013 13:52:47 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+

@@ -1,0 +1,39 @@
+5 Nov 2013 13:47:46 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 13:47:46 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+5 Nov 2013 13:47:46 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+
+5 Nov 2013 13:47:46 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+5 Nov 2013 13:47:46 GMT  :  Selected File: 
+/Users/radoslawjarzynka/Documents/icon.png
+
+5 Nov 2013 13:47:49 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/application.pdf
+
+5 Nov 2013 13:47:49 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Downloads/projekt_sdh.rar
+
+5 Nov 2013 13:47:49 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/icon.png
+
+5 Nov 2013 13:47:50 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/declaration.doc
+
+5 Nov 2013 13:47:51 GMT  :  Removed File: 
+/Users/radoslawjarzynka/Documents/aoeHD.zip
+
+5 Nov 2013 13:47:53 GMT  :  Selected File: 
+/Users/radoslawjarzynka/index.html
+
+Started calculating md5 for index.html
+
+Finished calculating md5 for file index.html
+
+ee3fc806e75db124bfb3aaa1dc4f5dfd
+

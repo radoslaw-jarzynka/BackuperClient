@@ -1,0 +1,8 @@
+9 Nov 2013 20:41:38 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/index.html
+
+9 Nov 2013 20:41:38 GMT  :  Data from settings file: 
+/Users/radoslawjarzynka/Downloads/jason_mraz_im_yours.gp5
+
+Successfully logged in to server as elo
+

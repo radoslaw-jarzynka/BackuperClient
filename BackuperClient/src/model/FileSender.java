@@ -37,7 +37,7 @@ public class FileSender extends NotifyingThread {
 			SimpleRemoteInputStream istream = null;
 			try {
 				istream = new SimpleRemoteInputStream(new FileInputStream(f.getAbsolutePath()));
-				server.uploadFile(username, f.getName(), f.lastModified(), " ", istream.export());
+				server.uploadFile(username, f.getName(), f.lastModified(), istream.export());
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (RemoteException e) {

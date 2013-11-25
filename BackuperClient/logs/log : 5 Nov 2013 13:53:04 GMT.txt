@@ -1,9 +1,0 @@
-5 Nov 2013 13:53:00 GMT  :  Selected File: 
-/Users/radoslawjarzynka/index.html
-
-5 Nov 2013 13:53:00 GMT  :  Selected File: 
-/Users/radoslawjarzynka/Documents/application.pdf
-
-5 Nov 2013 13:53:00 GMT  :  Selected File: 
-/Users/radoslawjarzynka/Documents/declaration.doc
-

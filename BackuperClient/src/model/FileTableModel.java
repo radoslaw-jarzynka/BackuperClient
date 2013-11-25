@@ -52,6 +52,10 @@ public class FileTableModel extends AbstractTableModel {
 		tableData.remove(r);
 	}
 	
+	public void clearTable() {
+		tableData.clear();
+	}
+	
 	@Override
 	public Object getValueAt(int arg0, int arg1) {
 		return tableData.elementAt(arg0).elementAt(arg1);

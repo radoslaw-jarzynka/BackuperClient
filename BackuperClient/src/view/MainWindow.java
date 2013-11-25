@@ -127,7 +127,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 					try {
 						server.disconnect(username);
 					} catch (RemoteException e) {
-						e.printStackTrace();
+						logController.addLine("Something went wrong " + e.getMessage());
 					}
 				System.exit(0);
 
@@ -168,20 +168,24 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		JMenuItem sendFiles = new JMenuItem("Send Files To Server");
 		JMenuItem backupFiles = new JMenuItem("Backup Files");
 		JMenuItem removeFilesFromServer = new JMenuItem("Remove Selected File From Server");
+		JMenuItem checkFileIntegrity = new JMenuItem("Check If Selected File Was Sent Properly");
 
 		filesMenu.add(chooseFiles);
 		filesMenu.add(sendFiles);
 		filesMenu.add(backupFiles);
 		filesMenu.add(removeFilesFromServer);
-
+		filesMenu.add(checkFileIntegrity);
+		
 		chooseFiles.setActionCommand("chooseFiles");
 		chooseFiles.addActionListener(this);
 		sendFiles.setActionCommand("sendFiles");
 		sendFiles.addActionListener(this);
 		backupFiles.setActionCommand("backupFiles");
 		backupFiles.addActionListener(this);
-		removeFilesFromServer.setActionCommand("removeSelectedFilesFromServer");
+		removeFilesFromServer.setActionCommand("removeSelectedFileFromServer");
 		removeFilesFromServer.addActionListener(this);
+		checkFileIntegrity.setActionCommand("checkFileIntegrity");
+		checkFileIntegrity.addActionListener(this);
 
 		JMenuItem choosePort = new JMenuItem("Choose Server Port");
 		JMenuItem chooseIP = new JMenuItem("Choose Server IP");
@@ -301,24 +305,28 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 					String[] str = s.split("___");
 					
 					File f = new File(str[0]);
-					selectedFiles.add(f);
-					logController.addLine(new Date().toGMTString()
-							+ "  :  Data from settings file: \n" + f.getAbsolutePath());
-					Vector<String> v = new Vector<String>();
-					v.add(f.getName());
-					Date d = new Date(f.lastModified());
-					v.add(d.toString());
-					try{
-						if (str[1]!= "null") {
-							selectedFilesMd5.add(selectedFiles.indexOf(f), str[1]);
-							v.add(str[1]);
-						}
-						else {
-							v.add("");
-						}
-					}catch (Exception e) {	}
-					localTableModel.add(v);
-					this.repaint();
+					if(f.exists()) {
+						selectedFiles.add(f);
+						logController.addLine(new Date().toGMTString()
+								+ "  :  Data from settings file: \n" + f.getAbsolutePath());
+						Vector<String> v = new Vector<String>();
+						v.add(f.getName());
+						Date d = new Date(f.lastModified());
+						v.add(d.toString());
+						try{
+							if (str[1]!= "null") {
+								selectedFilesMd5.add(selectedFiles.indexOf(f), str[1]);
+								v.add(str[1]);
+							}
+							else {
+								v.add("");
+							}
+						}catch (Exception e) {	}
+						localTableModel.add(v);
+						this.repaint();
+					} else {
+						logController.addLine("File " + f.getName() +" does not exist any more :<");
+					}
 				}
 			}
 			else {
@@ -377,24 +385,41 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		if (ae.getActionCommand() == "sendFiles") {
 			if (this.username != null) {
 				if (server !=null) {
-					//if thread wasn't initialized yet
-					if(fileSender == null) {
-						logController.addLine(new Date().toGMTString()
-								+ "  :  Sending files...");
-						fileSender = new FileSender(username, server, selectedFiles);
-						fileSender.addListener(this);
-						fileSender.start();
-					}
-					if (!fileSender.isAlive()) {
-						logController.addLine(new Date().toGMTString()
-								+ "  :  Sending files...");
-						fileSender = new FileSender(username, server, selectedFiles);
-						fileSender.addListener(this);
-						fileSender.start();
-					}
-					else {
-						logController.addLine(new Date().toGMTString() + "  :  Files currently transferred to server, please wait");
-					}
+					try {
+						Vector<File> filesToSend = new Vector<File>();
+						HashMap<String,Long> map = server.getMapOfFilesOnServer(username);
+						for (File f : selectedFiles) {
+							if (map.containsKey(f.getName())) {
+								if (f.lastModified() != map.get(f.getName())) {
+									logController.addLine(f.getName() + " was updated since last update, sending new version");
+									filesToSend.add(f);
+								} else {
+									logController.addLine(f.getName() + " is already on server");
+								}
+							} else {
+								logController.addLine(f.getName() + " is not on server and it will be sent");
+								filesToSend.add(f);	
+							}
+						}
+						//if thread wasn't initialized yet
+						if(fileSender == null) {
+							logController.addLine(new Date().toGMTString()
+									+ "  :  Sending files...");
+							fileSender = new FileSender(username, server, filesToSend);
+							fileSender.addListener(this);
+							fileSender.start();
+						}
+						if (!fileSender.isAlive()) {
+							logController.addLine(new Date().toGMTString()
+									+ "  :  Sending files...");
+							fileSender = new FileSender(username, server, filesToSend);
+							fileSender.addListener(this);
+							fileSender.start();
+						}
+						else {
+							logController.addLine(new Date().toGMTString() + "  :  Files are currently being transferred to server, please wait");
+						}
+					} catch (RemoteException e) {logController.addLine("Something went wrong " + e.getMessage());}
 				} else logController.addLine("Not connected to Server!");
 			} else {
 				logController.addLine("You're not logged in!");
@@ -416,7 +441,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 					receiver.start();
 				}
 			} catch(Exception e) {
-				e.printStackTrace();
+				logController.addLine("Something went wrong " + e.getMessage());
 			}
 			
 			
@@ -477,6 +502,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				logInWindow.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();
+				logController.addLine("Server is offline");;
 			}
 		}
 		
@@ -487,30 +513,86 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				RegisterWindow registerWindow = new RegisterWindow(this, server);
 				registerWindow.setVisible(true);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logController.addLine("Server is offline");;
 			}
 		}
 		
 		if (ae.getActionCommand() == "removeSelectedFileFromServer") {
-			Vector<String> v = new Vector<String>();
+			//Vector<String> v = new Vector<String>();
 			int[] selRows = serverFilesTable.getSelectedRows();
 			
 			for (int i : selRows) {
 				try {
 					server.removeSelectedFile(username,(String)serverTableModel.getValueAt(i, 0));
+					logController.addLine("Removing file " + (String)serverTableModel.getValueAt(i, 0) + " from server");
 				} catch (Exception e) {
-					e.printStackTrace();
+					logController.addLine("Something went wrong " + e.getMessage());
+				}
+			}
+			try {
+				updateFilesOnServerTable();
+			} catch (Exception e) {
+				logController.addLine("Something went wrong " + e.getMessage());
+			}
+			repaint();
+		}
+		if (ae.getActionCommand() == "checkFileIntegrity") {
+			int[] selRows = serverFilesTable.getSelectedRows();
+			
+			for (int i : selRows) {
+				try {
+					String md5 = server.getFileMD5(username, (String)serverTableModel.getValueAt(i, 0));
+					if (md5 == null) {
+						logController.addLine("Server is still counting this file's md5");
+					} else {
+						for (File f : selectedFiles) {
+							if (f.getName().equals((String)serverTableModel.getValueAt(i, 0))) {
+								if (selectedFilesMd5.get(selectedFiles.indexOf(f)).equals(md5)) {
+									logController.addLine("File " + f.getName() + " sent properly!");
+									serverTableModel.setValueAt(md5, i, 2);
+								} else {
+									logController.addLine("md5's are not the same, trying to send file again!");
+									Vector<File> filesToSend = new Vector<File>();
+									filesToSend.add(f);
+									if(fileSender == null) {
+										logController.addLine(new Date().toGMTString()
+												+ "  :  Sending files...");
+										fileSender = new FileSender(username, server, filesToSend);
+										fileSender.addListener(this);
+										fileSender.start();
+									}
+									if (!fileSender.isAlive()) {
+										logController.addLine(new Date().toGMTString()
+												+ "  :  Sending files...");
+										fileSender = new FileSender(username, server, filesToSend);
+										fileSender.addListener(this);
+										fileSender.start();
+									}
+									else {
+										logController.addLine(new Date().toGMTString() + "  :  Files are currently being transferred to server, please wait");
+									}
+								}
+							}
+						}
+					}
+				} catch (Exception e) {
+					logController.addLine("Something went wrong " + e.getMessage());
 				}
 			}
 			repaint();
 		}
 		if (ae.getActionCommand() == "disconnect") {
-			try {
-				server.disconnect(username);
-				this.username = null;
-				logController.addLine("Successfully logged out from server");
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (username != null) {
+				try {
+					server.disconnect(username);
+					this.username = null;
+					logController.addLine("Successfully logged out from server");
+				} catch (Exception e) {
+					this.username = null;
+					/*
+					logController.addLine("Something went wrong " + e.getMessage());
+					*/
+				}
 			}
 		}
 	}
@@ -646,7 +728,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 	public void updateFilesOnServerTable() {
 		try {
 			HashMap<String,Long> map = server.getMapOfFilesOnServer(username);
-			
+			serverTableModel.clearTable();
 			for (Entry<String, Long> entry : map.entrySet()) {
 				Vector<String> v = new Vector<String>();
 				v.add(entry.getKey());
@@ -658,7 +740,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 			repaint();
 			
 		} catch (RemoteException e) {
-			e.printStackTrace();
+			logController.addLine("Something went wrong " + e.getMessage());
 		}	
 	}
 

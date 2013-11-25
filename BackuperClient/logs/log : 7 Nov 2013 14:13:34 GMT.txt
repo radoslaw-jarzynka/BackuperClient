@@ -1,5 +1,0 @@
-7 Nov 2013 14:13:26 GMT  :  Data from settings file: 
-/Users/radoslawjarzynka/index.html
-
-Failed to log in, invalid username of password
-

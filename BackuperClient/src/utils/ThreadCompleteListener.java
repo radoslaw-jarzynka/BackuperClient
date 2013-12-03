@@ -4,7 +4,7 @@
  * @author Radoslaw Jarzynka
  */
 package utils;
-
+//listener - slucha czy ktorys watek zakonczyl swoja prace
 public interface ThreadCompleteListener {
     void notifyOfThreadComplete(final Thread thread);
 }

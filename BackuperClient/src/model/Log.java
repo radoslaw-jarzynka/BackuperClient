@@ -12,25 +12,25 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Vector;
 
-
+//model logu
 public class Log {
 	
 	private Vector<String> log;
-	
+	//konstruktor - tworzy wektor stringow i na wszelki wypadek go czysci
 	public Log() {
 		
 		log = new Vector<String>();
 		log.clear();
 	}
-	
+	//dodanie linni logu
 	public void addLineToLog(String line) {
 		log.add(line);
 	}
-	
+	//pobranie danej linijki kodu
 	public String getLineFromLog(int lineNo) {
 		return log.get(lineNo);
 	}
-	
+	//zapisanie logu do pliku tekstowego
 	public void saveLogToFile() {
 		File file = new File("logs/log : " + new Date().toGMTString() + ".txt");
 		FileWriter fw;
@@ -47,6 +47,7 @@ public class Log {
 			System.err.println("Error: " + e);
 		}
 	}
+	//pobranie calego wektora stringow
 	public Vector<String> getLog() {
 		return log;
 	}

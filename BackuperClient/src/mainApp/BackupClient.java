@@ -8,9 +8,9 @@ package mainApp;
 import java.rmi.Naming;
 
 import view.MainWindow;
-
+//glowna klasa
 public class BackupClient {
-	
+	//metoda main wywolujaca glowne okienko backupera
 	public static void main(String[] args) {
 		MainWindow mainWindow = new MainWindow();
 	}

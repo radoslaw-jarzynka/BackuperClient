@@ -16,16 +16,19 @@ import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
 
 import common.BackuperInterface;
 import utils.NotifyingThread;
-
+//klasa watku wysylajacego pliki na serwer
 public class FileSender extends NotifyingThread {
 
 	private String username;
 	private BackuperInterface server;
+	//kolejka plikow oczekujacych na wyslanie na serwer
+	//w przeciwienstwie do kolejki przy watki liczacym md5 ta nie bedzie zmieniana w trakcie jego pracy
 	private volatile static LinkedBlockingQueue<File> queue = new LinkedBlockingQueue<File>();
-	
+	//konstruktor pobierajacy nazwe uzytkownika, interfejs serwera i wektor nazw plikow
 	public FileSender(String username, BackuperInterface server, Vector<File> selectedFiles) {
 		this.username = username;
 		this.server = server;
+		//zamiana wektora na kolejke
 		queue.addAll(selectedFiles);
 	}
 
@@ -33,6 +36,7 @@ public class FileSender extends NotifyingThread {
 	@Override
 	public void doRun() {
 		if (queue.peek() != null) {
+			//jesli cos jest na gorze kolejki - wyslij to i sprawdzaj znowu az kolejka bedzie pusta
 			File f = queue.poll();
 			SimpleRemoteInputStream istream = null;
 			try {

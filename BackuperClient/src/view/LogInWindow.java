@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import common.BackuperInterface;
-
+//klasa okna sluzacego do logowania sie na serwerze
 public class LogInWindow extends JDialog implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,7 @@ public class LogInWindow extends JDialog implements ActionListener {
     private boolean succeeded;
     private MainWindow parent;
     private BackuperInterface server;
-    
+    //konstruktor pobierajacy frame ojca i interfejs serwera (by wiedzial gdzie sie logowac)
     public LogInWindow(final Frame parent, final BackuperInterface server) {
         super(parent, "Login", true);
         
@@ -101,19 +101,20 @@ public class LogInWindow extends JDialog implements ActionListener {
     public String getPassword() {
         return new String(passwordField.getPassword());
     }
- 
+    //czy udalo sie zalogowac na serwerze?
     public boolean isSucceeded() {
         return succeeded;
     }
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand() == "login") {
 			try {
+				//proba logowania sie
 	        	succeeded = server.logIn(getUsername(), getPassword());
 	            if (succeeded) {
 	                this.parent.getLogController().addLine("Successfully logged in to server as " + getUsername());
 	                this.parent.setUsername(getUsername());
+	                //jesli sie udalo uaktualnienie listy plikow na serwerze
 	                this.parent.updateFilesOnServerTable();
 	                this.parent.repaint();
 	                dispose();

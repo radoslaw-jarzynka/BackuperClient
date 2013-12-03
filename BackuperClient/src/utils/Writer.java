@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
-
+//klasa zapisujaca swoje ustawienia do pliku settings.txt
 public class Writer {
 	
 	private File file = new File("settings.txt");

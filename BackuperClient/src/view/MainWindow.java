@@ -55,11 +55,11 @@ import utils.Writer;
 import view.LogInWindow;
 import view.RegisterWindow;
 import model.Md5Generator;
-
+//klasa glownego okna aplikacji
 public class MainWindow extends JFrame implements ActionListener, ThreadCompleteListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final int WIDTH = 800;
+	private static final int WIDTH = 700;
 	private static final int HEIGHT = 700;
 
 	private String serverIP;
@@ -67,60 +67,64 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 	
 	private JPanel contentPane; 
 
-	//Threads
+	//Watki
 	Md5Generator md5gen;
 	FileSender fileSender;
 	
-	// client's app log
+	// kontroler logu, ktorym aplikacja komunikuje sie z klientem
 	private LogController logController;
-
+	//wektory zaznaczonych lokalnych plikow i ich funkcji skrótu md5
 	private Vector<File> selectedFiles;
 	private Vector<String> selectedFilesMd5;
 	
-	//is connected to server?
+	//czy aplikacja jest polaczona z serwerem?
 	private boolean isConnected;
 	
-	//server interface
+	//interfejs serwera
 	private BackuperInterface server;
+	//nazwa aktualnie zalogowanego uzytkownika
 	private String username;
 
-	// file tables
+	//tabele plikow lokalnych i na serwerze
 	private JTable chosenFilesTable;
 	private JTable serverFilesTable;
 
-	// table data vector
+	//model plikow potrzebny do tworzenia tabel
 	// @SuppressWarnings("rawtypes")
 	private FileTableModel localTableModel;
 	private FileTableModel serverTableModel;
 
-	// Buttons
+	//przyciski
 	private JButton chooseFilesButton;
+	private JButton removeLocalFilesButton;
+	private JButton removeServerFilesButton;
 	private JButton sendToServerButton;
 	private JButton backupFilesButton;
-	private JButton removeFilesButton;
+	private JButton checkFileButton;
 
-	// Labels
+	//labele
 	private JLabel selectedFilesLabel;
 	private JLabel serverFilesLabel;
 
-	// MenuBar
+	//pasek menu
 	private JMenuBar menuBar;
 
 	
-	//Public Constructor
+	//konstruktor
 	public MainWindow() {
 		super("Backuper!");
-
+		//aplikacja na poczatku nie jest polaczona i nikt nie jest zalogowany
 		isConnected = false;
 		username = null;
-		
+		//wczytanie polisy bezpieczenstwa
 		System.setProperty("java.security.policy", "policy");
 		System.setSecurityManager(new RMISecurityManager());
 		
-		//Adding Window Listener
+		//dodanie window listenera
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				//przy wylaczeniu aplikacji zapisanie logu do pliku i disconnect z serwerem
 				((MainWindow) windowEvent.getComponent()).getLogController().saveLogToFile();
 				Writer w = new Writer(((MainWindow) windowEvent.getComponent()).getSettings());
 				if(isConnected)
@@ -136,7 +140,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		
 		this.setResizable(false);
 		
-		//Create vector of selected files
+		//tworzenie wektorow plikow
 		selectedFiles = new Vector<File>();
 		selectedFilesMd5 = new Vector<String>();
 
@@ -144,26 +148,24 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		contentPane = new JPanel();
 		contentPane.setLayout(null);
 
-		// scroll bar for log
+		//scrollbar uzywany przez log
 		JScrollPane logScrollPane = new JScrollPane();
-		this.logController = new LogController(this, 0, 0, 780, 140);
+		this.logController = new LogController(0, 0, 680, 140);
 		logScrollPane.setViewportView(logController.getLogArea());
-		logScrollPane.setBounds(10, 510, 780, 140);
+		logScrollPane.setBounds(10, 510, 680, 140);
 		logScrollPane.setAutoscrolls(true);
 		contentPane.add(logScrollPane);
 
 		
-		//creating menu bar
+		//tworzenie paska menu
 		menuBar = new JMenuBar();
 
 		JMenu filesMenu = new JMenu("Actions");
 		JMenu serverPrefsMenu = new JMenu("Server");
-		JMenu aboutMenu = new JMenu("?");
 
 		menuBar.add(filesMenu);
 		menuBar.add(serverPrefsMenu);
-		menuBar.add(aboutMenu);
-
+		
 		JMenuItem chooseFiles = new JMenuItem("Select Local Files");
 		JMenuItem sendFiles = new JMenuItem("Send Files To Server");
 		JMenuItem backupFiles = new JMenuItem("Backup Files");
@@ -191,13 +193,11 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		JMenuItem chooseIP = new JMenuItem("Choose Server IP");
 		JMenuItem connectToServer = new JMenuItem("Connect To Server");
 		JMenuItem registerOnServer = new JMenuItem("Register On Server");
-		JMenuItem disconnectFromServer = new JMenuItem("Disconnect From Server");
 
 		serverPrefsMenu.add(chooseIP);
 		serverPrefsMenu.add(choosePort);
 		serverPrefsMenu.add(connectToServer);
 		serverPrefsMenu.add(registerOnServer);
-		serverPrefsMenu.add(disconnectFromServer);
 
 		chooseIP.setActionCommand("chooseIP");
 		chooseIP.addActionListener(this);
@@ -207,59 +207,82 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		connectToServer.addActionListener(this);
 		registerOnServer.setActionCommand("register");
 		registerOnServer.addActionListener(this);
-		disconnectFromServer.setActionCommand("disconnect");
-		disconnectFromServer.addActionListener(this);
-
-		JMenuItem aboutMe = new JMenuItem("About");
-
-		aboutMenu.add(aboutMe);
-		aboutMe.setActionCommand("about");
-		aboutMenu.addActionListener(this);
 
 		menuBar.setVisible(true);
 
 		this.setJMenuBar(menuBar);
-
-		//creating table of selected files
+		
+		//tworzenie labela nad tablica lokalnych plikow
+		selectedFilesLabel = new JLabel("Selected Local Files", JLabel.CENTER);
+		selectedFilesLabel.setVerticalTextPosition(JLabel.CENTER);
+		selectedFilesLabel.setHorizontalTextPosition(JLabel.CENTER);
+		selectedFilesLabel.setBounds(250, 15, 200, 20);
+		selectedFilesLabel.setVisible(true);
+		contentPane.add(selectedFilesLabel);
+		
+		//tworzenie tabeli lokalnych plikow
 		localTableModel = new FileTableModel();
 		chosenFilesTable = new JTable(localTableModel);
 		chosenFilesTable.setFillsViewportHeight(true);
 
 		JScrollPane localTableScrollPane = new JScrollPane();
 		localTableScrollPane.setViewportView(chosenFilesTable);
-		localTableScrollPane.setRowHeaderView(chosenFilesTable);
 		localTableScrollPane.setVisible(true);
 		localTableScrollPane.setBounds(50, 50, 600, 100);
 		contentPane.add(localTableScrollPane);
 		
-		//creating table of server files
+		//tworzenie labela nad tablica plikow na serwerze
+		serverFilesLabel = new JLabel("Files On Server", JLabel.CENTER);
+		serverFilesLabel.setVerticalTextPosition(JLabel.CENTER);
+		serverFilesLabel.setHorizontalTextPosition(JLabel.CENTER);
+		serverFilesLabel.setBounds(250, 165, 200, 20);
+		serverFilesLabel.setVisible(true);
+		contentPane.add(serverFilesLabel);
+		
+		//tworzenie tabeli plikow na serwerze
 		serverTableModel = new FileTableModel();
 		serverFilesTable = new JTable(serverTableModel);
 		serverFilesTable.setFillsViewportHeight(true);
 		JScrollPane serverTableScrollPane = new JScrollPane();
 		serverTableScrollPane.setViewportView(serverFilesTable);
-		
-		serverTableScrollPane.setRowHeaderView(serverFilesTable);
 		serverTableScrollPane.setVisible(true);
 		serverTableScrollPane.setBounds(50, 200, 600, 100);
 		contentPane.add(serverTableScrollPane);
 		
 
-		//creating buttons
+		//tworzenie przyciskow
 		chooseFilesButton = new JButton("Select Local Files");
 		chooseFilesButton.setVerticalTextPosition(AbstractButton.CENTER);
 		chooseFilesButton.setHorizontalTextPosition(AbstractButton.LEADING);
 		chooseFilesButton.setActionCommand("chooseFiles");
-		chooseFilesButton.setBounds(50, 350, 300, 50);
+		chooseFilesButton.setBounds(50, 325, 250, 50);
 		chooseFilesButton.setVisible(true);
 		chooseFilesButton.addActionListener(this);
 		contentPane.add(chooseFilesButton);
+		
+		removeLocalFilesButton = new JButton("Remove Selected Local File");
+		removeLocalFilesButton.setVerticalTextPosition(AbstractButton.CENTER);
+		removeLocalFilesButton.setHorizontalTextPosition(AbstractButton.LEADING);
+		removeLocalFilesButton.setActionCommand("removeFiles");
+		removeLocalFilesButton.setBounds(50, 385, 250, 50);
+		removeLocalFilesButton.setVisible(true);
+		removeLocalFilesButton.addActionListener(this);
+		contentPane.add(removeLocalFilesButton);
+		
+		removeServerFilesButton = new JButton("Remove Selected Server File");
+		removeServerFilesButton.setVerticalTextPosition(AbstractButton.CENTER);
+		removeServerFilesButton.setHorizontalTextPosition(AbstractButton.LEADING);
+		removeServerFilesButton.setActionCommand("removeSelectedFileFromServer");
+		removeServerFilesButton.setBounds(50, 445, 250, 50);
+		removeServerFilesButton.setVisible(true);
+		removeServerFilesButton.addActionListener(this);
+		contentPane.add(removeServerFilesButton);
 
 		sendToServerButton = new JButton("Send Files To Server");
 		sendToServerButton.setVerticalTextPosition(AbstractButton.CENTER);
 		sendToServerButton.setHorizontalTextPosition(AbstractButton.LEADING);
 		sendToServerButton.setActionCommand("sendFiles");
-		sendToServerButton.setBounds(450, 350, 300, 50);
+		sendToServerButton.setBounds(400, 325, 250, 50);
 		sendToServerButton.setVisible(true);
 		sendToServerButton.addActionListener(this);
 		contentPane.add(sendToServerButton);
@@ -268,19 +291,19 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		backupFilesButton.setVerticalTextPosition(AbstractButton.CENTER);
 		backupFilesButton.setHorizontalTextPosition(AbstractButton.LEADING);
 		backupFilesButton.setActionCommand("backupFiles");
-		backupFilesButton.setBounds(450, 410, 300, 50);
+		backupFilesButton.setBounds(400, 385, 250, 50);
 		backupFilesButton.setVisible(true);
 		backupFilesButton.addActionListener(this);
 		contentPane.add(backupFilesButton);
-
-		removeFilesButton = new JButton("Remove Selected Files From List");
-		removeFilesButton.setVerticalTextPosition(AbstractButton.CENTER);
-		removeFilesButton.setHorizontalTextPosition(AbstractButton.LEADING);
-		removeFilesButton.setActionCommand("removeFiles");
-		removeFilesButton.setBounds(50, 410, 300, 50);
-		removeFilesButton.setVisible(true);
-		removeFilesButton.addActionListener(this);
-		contentPane.add(removeFilesButton);
+		
+		checkFileButton = new JButton("Check If File Was Sent Properly");
+		checkFileButton.setVerticalTextPosition(AbstractButton.CENTER);
+		checkFileButton.setHorizontalTextPosition(AbstractButton.LEADING);
+		checkFileButton.setActionCommand("checkFileIntegrity");
+		checkFileButton.setBounds(400, 445, 250, 50);
+		checkFileButton.setVisible(true);
+		checkFileButton.addActionListener(this);
+		contentPane.add(checkFileButton);
 
 		this.setContentPane(contentPane);
 		this.pack();
@@ -290,10 +313,10 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 
 		
 		try {
-			//Load configuration file
+			//proba wczytania pliku konfiguracyjnego
 			Reader reader = new Reader("settings.txt");
 			
-			// read configuration file
+			//czytanie pliku konfiguracyjnego
 			if (reader.getInputFile()!=null) {
 				serverIP = reader.getInputFile().elementAt(0);
 				if (serverIP == null) serverIP = new String("localhost"); 
@@ -306,6 +329,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 					
 					File f = new File(str[0]);
 					if(f.exists()) {
+						//jesli plik istnieje - dodaj go, jak nie to wpisz w logu ze juz nie istnieje
 						selectedFiles.add(f);
 						logController.addLine(new Date().toGMTString()
 								+ "  :  Data from settings file: \n" + f.getAbsolutePath());
@@ -339,8 +363,10 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 			serverIP = new String("localhost");
 			serverPort = new String("1099");
 		}
-		
-		
+		//dodanie mojego podpisu do logu
+		logController.addLine("Author: Radosław Jarzynka");
+		logController.addLine("miniProjekt OPA 13Z = System zdalnego archiwizowania plików");
+		logController.addLine("25 XI 2013, Politechnika Warszawska");
 		
 		
 	}
@@ -348,12 +374,15 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 	@SuppressWarnings("deprecation")
 	@Override
 	public void actionPerformed(ActionEvent ae) {
+		//gdy wywolano akcje 'wybierz plik'
 		if (ae.getActionCommand() == "chooseFiles") {
+			//tworzenie obiektu JFileChooser
 			JFileChooser chooser = new JFileChooser();
 			chooser.setMultiSelectionEnabled(true);
 			int returnVal = chooser.showOpenDialog(this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				for (File f : chooser.getSelectedFiles()) {
+					//dodanie plikow
 					selectedFiles.add(f);
 					logController.addLine(new Date().toGMTString()
 							+ "  :  Selected File: \n" + f.getAbsolutePath());
@@ -361,20 +390,21 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 					v.add(f.getName());
 					Date d = new Date(f.lastModified());
 					v.add(d.toString());
-					// empty md5 - just of now
+					//na razie dodanie do pliku pustej wartosci md5
 					v.add("");
 					localTableModel.add(v);
-					if (md5gen == null) { // if thread wasn't created yet
+					//liczenie md5
+					if (md5gen == null) { // jesli watek nie zostal uruchomiony
 						logController.addLine("Started calculating md5 for "+ f.getName());
 						md5gen = new Md5Generator(f.getAbsolutePath());
 						md5gen.addListener(this);
 						md5gen.start();
-					} else if (!md5gen.isAlive()) { // if thread was created but it's not working
+					} else if (!md5gen.isAlive()) { // jesli watek zostal uruchomiony ale juz nie dziala
 						logController.addLine("Started calculating md5 for "+ f.getName());
 						md5gen = new Md5Generator(f.getAbsolutePath());
 						md5gen.addListener(this);
 						md5gen.start();
-					} else { //if thread is working
+					} else { //jesli watek dziala
 						logController.addLine("Calculating Md5 for " + f. getName() + " queued");
 						md5gen.addToQueue(f.getAbsolutePath());
 					//	md5gen.isQueued = true;
@@ -382,13 +412,17 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				}
 			}
 		}
+		//gdy wywolano akcje 'wyslij plik'
 		if (ae.getActionCommand() == "sendFiles") {
 			if (this.username != null) {
 				if (server !=null) {
 					try {
 						Vector<File> filesToSend = new Vector<File>();
+						//pobranie plikow z serwera
 						HashMap<String,Long> map = server.getMapOfFilesOnServer(username);
 						for (File f : selectedFiles) {
+							//sprawdzamy czy plik jest juz na serwerze, jesli nie to wysylamy. jesli jest to sprawdzamy jego lastmodified
+							//jesli chcemy wyslac nowszy to wysylamy, jak starszy badz niezmieniony to nie
 							if (map.containsKey(f.getName())) {
 								if (f.lastModified() != map.get(f.getName())) {
 									logController.addLine(f.getName() + " was updated since last update, sending new version");
@@ -401,7 +435,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 								filesToSend.add(f);	
 							}
 						}
-						//if thread wasn't initialized yet
+						//jesli watek wysylania nie zostal zainicjowany
 						if(fileSender == null) {
 							logController.addLine(new Date().toGMTString()
 									+ "  :  Sending files...");
@@ -409,6 +443,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 							fileSender.addListener(this);
 							fileSender.start();
 						}
+						//jesli watek zsotal zainicjowany, ale nie dziala
 						if (!fileSender.isAlive()) {
 							logController.addLine(new Date().toGMTString()
 									+ "  :  Sending files...");
@@ -416,6 +451,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 							fileSender.addListener(this);
 							fileSender.start();
 						}
+						//jesli watek aktualnie dziala - wyrzuc powiadomienie
 						else {
 							logController.addLine(new Date().toGMTString() + "  :  Files are currently being transferred to server, please wait");
 						}
@@ -425,28 +461,33 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				logController.addLine("You're not logged in!");
 			}
 		}
-		
+		//gdy wywolano akcje 'pobierz pliki'
 		if (ae.getActionCommand() == "backupFiles") {
-			Vector<String> v = new Vector<String>();
-			int[] selRows = serverFilesTable.getSelectedRows();
-			
-			for (int i : selRows) {
-				v.add((String)serverTableModel.getValueAt(i, 0));
-			}
-			try {
-				if (!v.isEmpty()) {
-					logController.addLine("Writing selected files");
-					FileReceiver receiver = new FileReceiver(username, server, v);
-					receiver.addListener(this);
-					receiver.start();
+			if (this.username != null) {
+				if (server !=null) {
+					Vector<String> v = new Vector<String>();
+					//wez zaznaczone pliki z tabeli serwera
+					int[] selRows = serverFilesTable.getSelectedRows();
+					
+					for (int i : selRows) {
+						v.add((String)serverTableModel.getValueAt(i, 0));
+					}
+					try {
+						if (!v.isEmpty()) {
+							//odpal watek pobierania plikow z serwera
+							logController.addLine("Writing selected files");
+							FileReceiver receiver = new FileReceiver(username, server, v);
+							receiver.addListener(this);
+							receiver.start();
+						}
+					} catch(Exception e) {
+						logController.addLine("Something went wrong " + e.getMessage());
+					}
+					
 				}
-			} catch(Exception e) {
-				logController.addLine("Something went wrong " + e.getMessage());
 			}
-			
-			
 		}
-
+		//gdy wywolano akcje 'usun plik lokalny'
 		if (ae.getActionCommand() == "removeFiles") {
 			int selRow[] = chosenFilesTable.getSelectedRows();
 			try {
@@ -462,7 +503,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				
 			}
 		}
-
+		//gdy wywolano akcje 'wybierz ip' - tworzenie okna pobrania adresu ip serwera
 		if (ae.getActionCommand() == "chooseIP") {
 			this.serverIP = (String) JOptionPane.showInputDialog(this,
 					"Enter server IP", "Choose IP", JOptionPane.PLAIN_MESSAGE);
@@ -476,6 +517,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 			this.logController.addLine(new Date().toGMTString()
 					+ "  :  Server IP set:\n" + this.serverIP);
 		}
+		//gdy wywolano akcje 'wybierz port' - tworzenie okna pobrania numeru portu serwera
 		if (ae.getActionCommand() == "choosePort") {
 			this.serverPort = (String) JOptionPane.showInputDialog(this,
 					"Enter server port", "Choose Port",
@@ -490,10 +532,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 			this.logController.addLine(new Date().toGMTString()
 					+ "  :  New server port entered:\n" + this.serverPort);
 		}
-		if (ae.getActionCommand() == "about") {
-
-		}
-		
+		//gdy wybrano akcje - polacz z serwerem - tworzenie okna logowania
 		if (ae.getActionCommand() == "connect") {
 			try {
 				Remote remote = Naming.lookup("rmi://"+serverIP+":"+serverPort+"/BackuperServer");
@@ -505,7 +544,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				logController.addLine("Server is offline");;
 			}
 		}
-		
+		//gdy wywolano akcje - zarejestruj na serwerze - tworzenie okna rejestracji
 		if (ae.getActionCommand() == "register") {
 			try {
 				Remote remote = Naming.lookup("rmi://"+serverIP+":"+serverPort+"/BackuperServer");
@@ -516,109 +555,101 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 				logController.addLine("Server is offline");;
 			}
 		}
-		
+		//gdy wywolano akcje 'usun pliki z serwera'
 		if (ae.getActionCommand() == "removeSelectedFileFromServer") {
-			//Vector<String> v = new Vector<String>();
-			int[] selRows = serverFilesTable.getSelectedRows();
-			
-			for (int i : selRows) {
-				try {
-					server.removeSelectedFile(username,(String)serverTableModel.getValueAt(i, 0));
-					logController.addLine("Removing file " + (String)serverTableModel.getValueAt(i, 0) + " from server");
-				} catch (Exception e) {
-					logController.addLine("Something went wrong " + e.getMessage());
+			if (this.username != null) {
+				if (server !=null) {
+					//wez zaznaczone wiersze z tabeli serwera
+					int[] selRows = serverFilesTable.getSelectedRows();
+					
+					for (int i : selRows) {
+						try {
+							server.removeSelectedFile(username,(String)serverTableModel.getValueAt(i, 0));
+							logController.addLine("Removing file " + (String)serverTableModel.getValueAt(i, 0) + " from server");
+						} catch (Exception e) {
+							logController.addLine("Something went wrong " + e.getMessage());
+						}
+					}
+					try {
+						updateFilesOnServerTable();
+					} catch (Exception e) {
+						logController.addLine("Something went wrong " + e.getMessage());
+					}
+					repaint();
 				}
 			}
-			try {
-				updateFilesOnServerTable();
-			} catch (Exception e) {
-				logController.addLine("Something went wrong " + e.getMessage());
-			}
-			repaint();
 		}
+		//gdy wywolano akcje 'sprawdz integralnosc wyslanego pliku'
 		if (ae.getActionCommand() == "checkFileIntegrity") {
-			int[] selRows = serverFilesTable.getSelectedRows();
-			
-			for (int i : selRows) {
-				try {
-					String md5 = server.getFileMD5(username, (String)serverTableModel.getValueAt(i, 0));
-					if (md5 == null) {
-						logController.addLine("Server is still counting this file's md5");
-					} else {
-						for (File f : selectedFiles) {
-							if (f.getName().equals((String)serverTableModel.getValueAt(i, 0))) {
-								if (selectedFilesMd5.get(selectedFiles.indexOf(f)).equals(md5)) {
-									logController.addLine("File " + f.getName() + " sent properly!");
-									serverTableModel.setValueAt(md5, i, 2);
-								} else {
-									logController.addLine("md5's are not the same, trying to send file again!");
-									Vector<File> filesToSend = new Vector<File>();
-									filesToSend.add(f);
-									if(fileSender == null) {
-										logController.addLine(new Date().toGMTString()
-												+ "  :  Sending files...");
-										fileSender = new FileSender(username, server, filesToSend);
-										fileSender.addListener(this);
-										fileSender.start();
-									}
-									if (!fileSender.isAlive()) {
-										logController.addLine(new Date().toGMTString()
-												+ "  :  Sending files...");
-										fileSender = new FileSender(username, server, filesToSend);
-										fileSender.addListener(this);
-										fileSender.start();
-									}
-									else {
-										logController.addLine(new Date().toGMTString() + "  :  Files are currently being transferred to server, please wait");
+			if (this.username != null) {
+				if (server !=null) {
+					int[] selRows = serverFilesTable.getSelectedRows();
+					for (int i : selRows) {
+						try {
+							//pobierz md5 i porownaj je z md5 pliku na dysku
+							String md5 = server.getFileMD5(username, (String)serverTableModel.getValueAt(i, 0));
+							if (md5 == null) {
+								logController.addLine("Server is still counting this file's md5");
+							} else {
+								for (File f : selectedFiles) {
+									if (f.getName().equals((String)serverTableModel.getValueAt(i, 0))) {
+										if (selectedFilesMd5.get(selectedFiles.indexOf(f)).equals(md5)) {
+											logController.addLine("File " + f.getName() + " sent properly!");
+											serverTableModel.setValueAt(md5, i, 2);
+										} else {
+											//gdy sie nie zgadza - wyslij ponownie
+											logController.addLine("md5's are not the same, trying to send file again!");
+											Vector<File> filesToSend = new Vector<File>();
+											filesToSend.add(f);
+											if(fileSender == null) {
+												logController.addLine(new Date().toGMTString()
+														+ "  :  Sending files...");
+												fileSender = new FileSender(username, server, filesToSend);
+												fileSender.addListener(this);
+												fileSender.start();
+											}
+											if (!fileSender.isAlive()) {
+												logController.addLine(new Date().toGMTString()
+														+ "  :  Sending files...");
+												fileSender = new FileSender(username, server, filesToSend);
+												fileSender.addListener(this);
+												fileSender.start();
+											}
+											else {
+												logController.addLine(new Date().toGMTString() + "  :  Files are currently being transferred to server, please wait");
+											}
+										}
 									}
 								}
 							}
+						} catch (Exception e) {
+							logController.addLine("Something went wrong " + e.getMessage());
 						}
 					}
-				} catch (Exception e) {
-					logController.addLine("Something went wrong " + e.getMessage());
-				}
-			}
-			repaint();
-		}
-		if (ae.getActionCommand() == "disconnect") {
-			if (username != null) {
-				try {
-					server.disconnect(username);
-					this.username = null;
-					logController.addLine("Successfully logged out from server");
-				} catch (Exception e) {
-					this.username = null;
-					/*
-					logController.addLine("Something went wrong " + e.getMessage());
-					*/
+					repaint();
 				}
 			}
 		}
 	}
 
-	/**
-	 * @return the serverIP
-	 */
+	//gettery i settery
 	public String getServerIP() {
 		return serverIP;
 	}
 
-	/**
-	 * @param serverIP
-	 *            the serverIP to set
-	 */
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
 	}
 
-	/**
-	 * @return the serverPort
-	 */
 	public String getServerPort() {
 		return serverPort;
 	}
 	
+	public void setServerPort(String serverPort) {
+		this.serverPort = serverPort;
+	}
+	
+	//pobranie ustawien z obiektu jako wektor stringow
 	public Vector<String> getSettings() {
 		Vector<String> settings = new Vector<String>();
 		settings.add(serverIP);
@@ -636,14 +667,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		return settings;
 	}
 
-	/**
-	 * @param serverPort
-	 *            the serverPort to set
-	 */
-	public void setServerPort(String serverPort) {
-		this.serverPort = serverPort;
-	}
-
+	//sprawdzenie czy IP wprowadzone do okna pobrania ip ma poprawna forme (xxx.xxx.xxx.xxx lub 'localhost')
 	private boolean isProperIP() {
 		boolean t = true;
 		String[] s = this.serverIP.split("\\.");
@@ -659,7 +683,7 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		if (this.serverIP.equals("localhost"))	t = true;
 		return t;
 	}
-
+	//sprawdzenie czy wprowadzono poprawny numer portu
 	private boolean isProperPort() {
 		boolean t = true;
 		try {
@@ -671,60 +695,39 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		}
 		return t;
 	}
-	
+	//gettery i settery
 	public LogController getLogController(){
 		return logController;
 	}
 
-	/**
-	 * @return the selectedFiles
-	 */
 	public Vector<File> getSelectedFiles() {
 		return selectedFiles;
 	}
 
-	/**
-	 * @param selectedFiles the selectedFiles to set
-	 */
-	public void setSelectedFiles(Vector<File> selectedFiles) {
+ void setSelectedFiles(Vector<File> selectedFiles) {
 		this.selectedFiles = selectedFiles;
 	}
 
-	/**
-	 * @return the localTableModel
-	 */
 	public FileTableModel getLocalTableModel() {
 		return localTableModel;
 	}
 
-	/**
-	 * @param localTableModel the localTableModel to set
-	 */
 	public void setLocalTableModel(FileTableModel localTableModel) {
 		this.localTableModel = localTableModel;
 	}
 
-	/**
-	 * @param logController the logController to set
-	 */
 	public void setLogController(LogController logController) {
 		this.logController = logController;
 	}
 	
-	/**
-	 * @param logController the logController to set
-	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
 	
-	/**
-	 * @param logController the logController to set
-	 */
 	public String getUsername() {
 		return username;
 	}
-
+	//metoda odswiezajaca tabele plikow na serwerze - pobiera mape pliko z serwera i ja interpretuje
 	public void updateFilesOnServerTable() {
 		try {
 			HashMap<String,Long> map = server.getMapOfFilesOnServer(username);
@@ -744,13 +747,12 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 		}	
 	}
 
-	/* (non-Javadoc)
-	 * @see utils.ThreadCompleteListener#notifyOfThreadComplete(java.lang.Thread)
-	 */
+	//metoda wywolana gdy ktorys z watkow zakonczy swoje dzialanie
 	@Override
 	public void notifyOfThreadComplete(Thread thread) {
 		
 	if(thread instanceof Md5Generator) {
+		//gdy byl to watek liczacy md5 - dodaj odpowiedni wpis w tabeli plikow lokalnych
 		for (File f : selectedFiles) {
 			if (f.getAbsolutePath().equals(((Md5Generator) thread).getFilePath())) {
 				selectedFilesMd5.add(selectedFiles.indexOf(f), ((Md5Generator) thread).getMd5());
@@ -762,9 +764,11 @@ public class MainWindow extends JFrame implements ActionListener, ThreadComplete
 			}
 		}
 	if (thread instanceof FileSender) {
+		//gdy byl to watek wysylajacy pliki - odswiez tabele plikow na serwerze
 		updateFilesOnServerTable();
 		}
 	if (thread instanceof FileReceiver) {
+		//gdy byl to watek zapisujacy pliki - wyswietl powiadomienie
 		logController.addLine("Finished writing files");
 	}
 	}

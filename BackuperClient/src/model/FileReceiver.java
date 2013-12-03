@@ -20,16 +20,18 @@ import com.healthmarketscience.rmiio.SimpleRemoteInputStream;
 
 import common.BackuperInterface;
 import utils.NotifyingThread;
-
+//watek odbierajacy pliki z serwera
 public class FileReceiver extends NotifyingThread {
 
 	private String username;
 	private BackuperInterface server;
+	//kolejka plikow, ktore chcemy pobrac
 	private volatile static LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
-	
+	//konstruktor pobierajacy nazwe uzytkownika, serwer i wektro nazw plikow
 	public FileReceiver(String username, BackuperInterface server, Vector<String> selectedFiles) {
 		this.username = username;
 		this.server = server;
+		//zamiana wektora na kolejke
 		queue.addAll(selectedFiles);
 	}
 
@@ -37,6 +39,7 @@ public class FileReceiver extends NotifyingThread {
 	@Override
 	public void doRun() {
 		if (queue.peek() != null) {
+			//sprawdz czy jest cos na czubku kolejki - jak jest to to pobierz i sprawdzaj ponownie
 			String fileName = queue.poll();
 			InputStream istream = null;
 			FileOutputStream ostream = null;

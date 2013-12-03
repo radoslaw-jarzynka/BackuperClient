@@ -8,11 +8,12 @@ package model;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
-
+//model do tabelek plikow lokalnych i na serwerze - tabela musi wiedziec jak to wyswietlic
 public class FileTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 2L;
 	
+	//java nie lubi wektora wektorow ale to najwygodniejszy sposob
 	@SuppressWarnings("rawtypes")
 	private Vector<Vector> tableData;
 	private Vector<String> columnNames;

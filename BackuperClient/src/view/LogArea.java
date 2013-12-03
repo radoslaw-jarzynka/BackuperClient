@@ -6,7 +6,7 @@
 package view;
 
 import javax.swing.JTextArea;
-
+//klasa pola tekstowego logu wyswietlanego w oknie aplikacji klienckiej
 public class LogArea extends JTextArea {
 	
 	private static final long serialVersionUID = 1L;

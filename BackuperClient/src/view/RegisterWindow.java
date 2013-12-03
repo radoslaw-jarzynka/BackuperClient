@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import common.BackuperInterface;
-
+//okienko rejestracji na serwerze
 public class RegisterWindow extends JDialog implements ActionListener {
 	
 	private static final long serialVersionUID = 1L;
@@ -38,7 +38,7 @@ public class RegisterWindow extends JDialog implements ActionListener {
     private boolean succeeded;
     private MainWindow parent;
     private BackuperInterface server;
-    
+    //konstruktor pobierajacy frame ojca i interfejs serwera (by wiedzial gdzie sie loguje)
     public RegisterWindow(final Frame parent, final BackuperInterface server) {
         super(parent, "Register", true);
         
@@ -49,7 +49,7 @@ public class RegisterWindow extends JDialog implements ActionListener {
         GridBagConstraints constraints = new GridBagConstraints();
  
         constraints.fill = GridBagConstraints.HORIZONTAL;
- 
+        //ustawienie layoutu okna
         usernameLabel = new JLabel("Set Username: ");
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -108,11 +108,11 @@ public class RegisterWindow extends JDialog implements ActionListener {
         setResizable(false);
         setLocationRelativeTo(parent);
     }
- 
+    //getter nazwy uzytkownika
     public String getUsername() {
         return usernameField.getText().trim();
     }
- 
+    //pobranie hasla - haslo w obu polach musi sie zgadzac!
     public String getPassword() {
     	String s1 = new String(passwordField.getPassword());
     	String s2 = new String(retypePasswordField.getPassword());
@@ -120,7 +120,7 @@ public class RegisterWindow extends JDialog implements ActionListener {
     			return s1;
     	else return null;
     }
- 
+    //czy udalo sie zarejestrowac na serwerze?
     public boolean isSucceeded() {
         return succeeded;
     }
@@ -130,6 +130,7 @@ public class RegisterWindow extends JDialog implements ActionListener {
 		if (e.getActionCommand() == "register") {
 			try {
 				if (getPassword() != null) {
+					//proba rejestracji, jesli jest juz taki uzytkownik to sie nie uda
 		        	succeeded = server.register(getUsername(), getPassword());
 		            if (succeeded) {
 		                this.parent.getLogController().addLine("Successfully registered as " + getUsername());

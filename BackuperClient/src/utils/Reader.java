@@ -2,7 +2,7 @@ package utils;
 
 import java.util.Vector;
 import java.io.*;
-
+//metoda czytajaca plik ustawien (nie czyta ze zrozumieniem, tylko zapisuje wektor stringow w pamieci)
 public class Reader {
 	
 	private Vector<String> inputFile;
